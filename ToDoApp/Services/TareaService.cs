@@ -57,27 +57,24 @@ namespace ToDoApp.Services
             return rows > 0;
         }
 
-        public async Task<bool> UpdateTareaAsync(int id, string changes)
+        public async Task<bool> UpdateTareaAsync(int id, TareaDTO changes)
         {
-            var updatedTask = await _todoContext.Tareas.FirstOrDefaultAsync(t => t.Id == id);
+            var updatedTask = await _todoContext.Tareas.FirstOrDefaultAsync(t => t.Id == id && t.Activo);
 
             if (updatedTask == null) return false;
-            if(changes != null && (changes.Trim() == "pendiente" || changes.Trim() == "en curso" || changes.Trim() == "finalizada"))
+           
+            if (changes.Estado.ToLower() == "pendiente" || changes.Estado.ToLower() == "en curso" || changes.Estado.ToLower() == "finalizado")
             {
-                updatedTask.Estado = updatedTask.Estado;
+                updatedTask.Estado = changes.Estado.ToUpper();
+                updatedTask.Descripcion = changes.Descripcion;
+                updatedTask.FechaModificacion = DateTime.Now;
+                updatedTask.Titulo = changes.Titulo;
 
-                updatedTask.Descripcion = updatedTask.Descripcion;
-
-                updatedTask.FechaModificacion = updatedTask.FechaModificacion;
-
-                updatedTask.Titulo = updatedTask.Titulo;
+                int rows = await _todoContext.SaveChangesAsync();
+                return rows > 0;
             }
 
-            
-
-            int rows = await _todoContext.SaveChangesAsync();
-
-            return rows > 0;
+            return false;
         }
 
         public async Task<bool> DeleteTareasAsync(int id)

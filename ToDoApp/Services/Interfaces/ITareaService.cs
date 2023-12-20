@@ -10,7 +10,7 @@ namespace ToDoApp.Services.Interfaces
   
         public Task<bool> AddTareaAsync(TareaDTO tarea);
 
-        public Task<bool> UpdateTareaAsync(int id, string changes);
+        public Task<bool> UpdateTareaAsync(int id, TareaDTO changes);
 
         public Task<bool> DeleteTareasAsync(int id);
     }

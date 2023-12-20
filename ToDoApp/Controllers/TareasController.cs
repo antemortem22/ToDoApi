@@ -46,9 +46,9 @@ namespace ToDoApp.Controllers
 
         [HttpPut("Updatear tareas")]
 
-        public async Task<IActionResult> UpdateTarea([FromBody] UpdateTareaRequest request)
+        public async Task<IActionResult> UpdateTarea( int id, [FromBody] TareaDTO request)
         {
-            var result = await _tareasService.UpdateTareaAsync(request.Id, request.InfoTarea);
+            var result = await _tareasService.UpdateTareaAsync(id, request);
 
             if (!result) return BadRequest(new { Error = "No se pudo modificar la tarea" });
 
