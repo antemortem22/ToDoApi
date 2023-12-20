@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Threading;
 using ToDoApp.Domain.DTO;
 using ToDoApp.Domain.Entities;
 using ToDoApp.Repository;
@@ -41,7 +40,7 @@ namespace ToDoApp.Services
                 newTask.FechaModificacion = DateTime.Now;
                 newTask.Activo = true;
 
-                if (tarea.Estado.ToLower().Trim() == "pendiente" || tarea.Estado?.ToLower().Trim() == "en curso" || tarea.Estado?.ToLower().Trim() == "finalizada")
+                if (tarea.Estado.Trim() == "pendiente" || tarea.Estado.Trim() == "en curso" || tarea.Estado.Trim() == "finalizada")
                 {
                     newTask.Estado = tarea.Estado.ToUpper();
                 }
