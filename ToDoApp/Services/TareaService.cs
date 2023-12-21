@@ -1,93 +1,57 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ToDoApp.Domain.DTO;
+﻿using ToDoApp.Domain.DTO;
 using ToDoApp.Domain.Entities;
-using ToDoApp.Repository;
+using ToDoApp.Repository.Interface;
 using ToDoApp.Services.Interfaces;
 
 namespace ToDoApp.Services
 {
     public class TareaService : ITareaService
     {
-        private readonly ToDoContext _todoContext;
+        ITareaRespository _repository;
 
-        public TareaService(ToDoContext context)
+        public TareaService(ITareaRespository repository)
         {
-            _todoContext = context;
+            _repository = repository;
         }
+
         public async Task<List<Tarea>> GetAllTareasActivasAsync()
         {
-            return await _todoContext.Tareas
-                                      .Where(task => task.Activo)
-                                      .ToListAsync();
+            var result = await _repository.GetAllActivasAsync();
+
+            return result;
         }
 
         public async Task<List<Tarea>> GetAllTareasBajasAsync()
         {
-            return await _todoContext.Tareas
-                                      .Where(task => task.Activo == false)
-                                      .ToListAsync();
+            var result = await _repository.GetAllBajasAsync();
+
+            return result;
         }
 
         public async Task<bool> AddTareaAsync(TareaDTO tarea)
         {
-            var newTask = new Tarea();
+            var result = await _repository.AddTaskAsync(tarea);
 
-            if (tarea.Titulo != null && tarea.Descripcion != null)
-            {
-                newTask.Titulo = tarea.Titulo;
-                newTask.Descripcion = tarea.Descripcion;
-                newTask.FechaAlta = DateTime.Now;
-                newTask.FechaModificacion = DateTime.Now;
-                newTask.Activo = true;
-
-                if (tarea.Estado.Trim() == "pendiente" || tarea.Estado.Trim() == "en curso" || tarea.Estado.Trim() == "finalizada")
-                {
-                    newTask.Estado = tarea.Estado.ToUpper();
-                }
-                else
-                {
-                    return false;
-                }
-
-                await _todoContext.Tareas.AddAsync(newTask);
-            }
-
-            int rows = await _todoContext.SaveChangesAsync();
-
-            return rows > 0;
+            return result;
         }
 
         public async Task<bool> UpdateTareaAsync(int id, TareaDTO changes)
         {
-            var updatedTask = await _todoContext.Tareas.FirstOrDefaultAsync(t => t.Id == id && t.Activo);
+            var result = await _repository.UpdateTaskAsync(id, changes);
 
-            if (updatedTask == null) return false;
-           
-            if (changes.Estado.ToLower() == "pendiente" || changes.Estado.ToLower() == "en curso" || changes.Estado.ToLower() == "finalizado")
-            {
-                updatedTask.Estado = changes.Estado.ToUpper();
-                updatedTask.Descripcion = changes.Descripcion;
-                updatedTask.FechaModificacion = DateTime.Now;
-                updatedTask.Titulo = changes.Titulo;
+            return result;
 
-                int rows = await _todoContext.SaveChangesAsync();
-                return rows > 0;
-            }
-
-            return false;
         }
 
         public async Task<bool> DeleteTareasAsync(int id)
         {
-            var tareaDeleted = await _todoContext.Tareas.FirstOrDefaultAsync(t => t.Id == id);
-            if (tareaDeleted == null) return false;
-            tareaDeleted.Activo = false;
+            var result = await _repository.DeleteTaskAsync(id);
 
-            int rows = await _todoContext.SaveChangesAsync();
-        
-            return rows > 0; 
+            return result;
         }
-
-
     }
+
+    //Validaciones 
+
+    
 }

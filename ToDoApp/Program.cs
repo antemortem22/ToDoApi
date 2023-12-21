@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using ToDoApp.Services;
 using ToDoApp.Services.Interfaces;
+using ToDoApp.Repository.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ builder.Services.AddDbContext<ToDoContext>(config =>
 });
 
 builder.Services.AddScoped<ITareaService, TareaService>();
+builder.Services.AddScoped<ITareaRespository, TareaRepository>();
 
 //
 

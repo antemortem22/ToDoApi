@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToDoApp.Domain.DTO;
-using ToDoApp.Domain.Entities;
-using ToDoApp.Domain.Request;
 using ToDoApp.Services.Interfaces;
 
 namespace ToDoApp.Controllers
@@ -16,7 +14,7 @@ namespace ToDoApp.Controllers
             _tareasService = tareasService;
         }
 
-        [HttpGet("Lista de tareas activas")]
+        [HttpGet("activeListTask")]
 
         public async Task<IActionResult> GetTareasActivas()
         {
@@ -26,7 +24,7 @@ namespace ToDoApp.Controllers
 
         }
 
-        [HttpGet("Lista de tareas dadas de baja")]
+        [HttpGet("inactiveListTask")]
         public async Task<IActionResult> GetTareasBajas()
         {
             var result = await _tareasService.GetAllTareasBajasAsync();
@@ -35,7 +33,7 @@ namespace ToDoApp.Controllers
 
         }
 
-        [HttpPost("Agregar tareas")]
+        [HttpPost("addTask")]
         public async Task<IActionResult> AddTarea([FromBody] TareaDTO request)
         {
             var result = await _tareasService.AddTareaAsync(request);
@@ -44,7 +42,7 @@ namespace ToDoApp.Controllers
             return Created("", new { Message = "La tarea fue creada correctamente" });
         }
 
-        [HttpPut("Updatear tareas")]
+        [HttpPut("{id}/updateTask")]
 
         public async Task<IActionResult> UpdateTarea( int id, [FromBody] TareaDTO request)
         {
@@ -55,7 +53,7 @@ namespace ToDoApp.Controllers
             return Ok(new { Message = "La tarea se modifico correctamente" });
         }
 
-        [HttpDelete("Borrado logico de tareas")]
+        [HttpDelete("{id}/taskEraser")]
         public async Task<IActionResult> DeleteTareasAsync(int id)
         {
             var result = await _tareasService.DeleteTareasAsync(id);

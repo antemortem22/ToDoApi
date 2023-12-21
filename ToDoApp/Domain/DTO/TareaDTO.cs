@@ -7,7 +7,5 @@
         public string Estado { get; set; } = "pendiente";
 
         public string Descripcion { get; set; }
-       
-
     }
 }
